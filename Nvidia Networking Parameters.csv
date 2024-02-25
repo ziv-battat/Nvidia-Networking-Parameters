@@ -1,0 +1,463 @@
+﻿Parameter name,HW Name ,Description,Arch comments,Implementation comments,per Device/port/VL,Spec Size,HW Size,Counting Unit,Generating Unit,Units,CX-7,CX-8,QM-2,QM-3,SP-5,GB100,GR100,MAD Class,Attribute ID,Attribute Name,Field name,PRM reg ID,PRM register,PRM Group / page,PRM field,BMC (command.field),Supported HW intefaces ,Frequency changes,Verified or not
+SymbolErrorCounter,symbol_errors,"Total number of minor link errors detected on one or more physical lanes. Refer to the InfiniBand Architecture Specification, Volume 2, Link/Phy Interface.",,,Port,"16
+64",64,PLU,PLU,Blocks,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",SymbolErrorCounter,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",symbol_error_counter,,,,
+LinkErrorRecoveryCounter,link_error_recovery,"Total number of times the Port Training state machine has successfully completed the link error recovery process. Refer to the InfiniBand Architecture Specification, Volume 2, Link/Phy Interface.",,,Port,"8
+64",64,PLU,PLU,Events,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",LinkErrorRecoveryCounter,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",link_error_recovery_counter,,,,
+LinkDownedCounter,link_downed_counter,"Total number of times the Port Training state machine has failed the link error recovery process and downed the link. Refer to the InfiniBand Architecture Specification, Volume 2, Link/Phy Interface.",,,Port,"8
+64",64,PLU,PLU,Events,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",LinkDownedCounter,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",link_downed_counter,,,,
+PortRcvErrors,port_rcv_err_inc,"Total number of packets containing an error that were received on the port. These errors include:
+• Local physical errors (ICRC, VCRC, LPCRC, and all physical errors that cause entry into the BAD PACKET or BAD PACKET DISCARD states of the packet receiver state machine)
+• Malformed data packet errors (LVer, length, VL)
+• Malformed link packet errors (operand, length, VL)
+• Packets discarded due to buffer overrun",,,Port,"16
+64",64,LLU,PLU,Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortRcvErrors,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_rcv_errors,,,,
+PortRcvRemotePhysicalErrors,ebp_cnt_inc,Total number of packets marked with the EBP delimiter received on the port.,,EBP,Port,"16
+64",64,LLU,LLU,Events,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortRcvRemotePhysicalErrors,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute","
+port_rcv_remote_physical_errors",,,,
+PortRcvSwitchRelayErrors,port_dlid_mapping_err_inc,"Total number of packets received on the port that were discarded because they could not be forwarded by the switch relay. Reasons for this include:
+• DLID mapping 
+• VL mapping
+• Looping (output port = input port)","Includes DLID mapping, VL mapping, Looping.
+VL mapping - notice that the counter is an RX counter. MC - no copy of the packet was transmitted due to VL mapping issues.
+Routed packets should be counted on the router port (see router port counters)",,Port,"16
+64",64,FDB,"LLU - link dlid check (llu counter: port_dlid_mapping)
+FDB - discard reasons: PortDlidMapping, LB_Discard, PortVlMapping (via DCM) 
+
+SMA - missing counter, see https://redmine.mellanox.com/issues/3451407",Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortRcvSwitchRelayErrors,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_rcv_switch_relay_errors,,,,
+PortXmitDiscard,port_xmit_discard,"Total number of outbound packets discarded by the port because the port is down or congested. Reasons for this include:
+• Output port is not in the active state
+• Packet length exceeded NeighborMTU
+• Switch Lifetime Limit exceeded
+• Switch HOQ Lifetime Limit exceeded 
+This may also include packets discarded while in VLStalled State.",,DCM generate the INC and LLU counts it,Port,"16
+64",64,LLU,"LLU - link dlid check (llu counter: port_dlid_mapping)
+FDB - discard reasons: PortDlidMapping, LB_Discard, PortVlMapping (via DCM) 
+
+SMA - missing counter, see https://redmine.mellanox.com/issues/3451407",Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortXmitDiscard,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_xmit_discards,,,,
+PortXmitConstraintErrors,port_xmit_constraint_errors,"Total number of packets not transmitted from the switch physical port for the following reasons:
+• FilterRawOutbound is true and packet is raw
+• PartitionEnforcementOutbound is true and packet fails partition key check or IP version check","PKey Error, Raw filter, Ipver (no NxtHdr)",DCM generate the INC and LLU counts it,Port,"8
+64",64,LLU,DCM - pkey error/raw/ipver,Packets,-,-,V,V,V,-,-,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortXmitConstraintErrors,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_xmit_constraint_errors,,,,
+PortRcvConstraintErrors,port_rcv_constraint_err_inc,"Total number of packets received on the switch physical port that are discarded for the following reasons:
+• FilterRawInbound is true and packet is raw
+• PartitionEnforcementInbound is true and packet fails partition key check or IP version check","PKey Error, Raw filter, Ipver, Config (disabled default): GRH.NxtHdr","FW: For switches, if pkey check is enabled then pkey check includes ipver. For router, Ipver is always included (need to add this to IBTA spec). GRH.NxtHdr is not in spec (March 2014)",Port,"8
+64",64,LLU,LLU,Packets,V,V,V,V,V,-,-,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortRcvConstraintErrors,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_rcv_constraint_errors,,,,
+LocalLinkIntegrityErrors,local_link_integrity_err_inc,The number of times that the count of local physical errors exceeded the threshold specified by LocalPhyErrors;,,,Port,"4
+64",64,LLU,LLU,Events,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",LocalLinkIntegrityErrors,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",local_link_integrity_errors,,,,
+ExcessiveBufferOverrun,excessive_buffer_err_inc,"The number of times that OverrunErrors consecutive flow control update periods occurred, each having at least one overrun error;",,,Port,"4
+64",64,LLU,LLU,Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",ExcessiveBufferOverrun,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",excessive_buffer_overrun_errors,,,,
+VL15Dropped,vl15_dropped_inc,"Number of incoming VL15 packets dropped due to resource limitations (e.g., lack of buffers) in the port",Note: FW must sum the counters from the LLU and DCM,"Pelican has 2 counters: DCM, LLU. FW needs to sum them",Port,"16
+64",64,"LLU, DCM","LLU checks the buffer overrun for VL15
+FTO -> FDB - discard reason: VL15 overrun discard",Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",VL15Dropped,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",vl_15_dropped,,,,
+QP1Dropped,qp1_dropped,"Number of QP1 MADs (packets) dropped due to resource limitations (e.g., lack of buffers or receives posted) on the port. Only valid on end ports",,,Port,"16
+64",64,CLU RX,,Packets,V,V,-,-,-,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",QP1Dropped,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",qp1_dropped,,,,
+PortXmitData,port_xmit_data_inc,"Total number of data octets, divided by 4, transmitted on all VLs from the port. This includes all octets between (and not including) the start of packet delimiter and the VCRC, and may include packets containing errors. It excludes all link packets.","The counter does not count ARN packets
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS
+
+
+to extract data counters per protocol :
+IBg2: has its own counter: port_xmit_ibg2_data
+NVL: data VL counter - NVL use unique VL
+IBg1: PortRcvData - port_xmit_ibg2_data - NVL
+
+Refer to Visibility IAS SD, BW counters section, for more information
+
+",,Port,"32
+64",64,LLU,LLU (TX),Bytes,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortXmitData,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_xmit_data,,,,
+port_xmit_ibg2_data,port_xmit_ibg2_data_inc,Counts IBg2 data sent including FCS. ,"count in bytes, with FCS",,Port,-,64,LLU,LLU (TX),Bytes,-,V,-,V,V,-,-,,,,,,,,,,,,
+PortRcvData,port_rcv_data_inc,"Total number of data octets, divided by 4, received on all VLs at the port. This includes all octets between (and not including) the start of packet delimiter and the VCRC, and may include packets containing errors.","The counter does not count ARN packets and flow-control packets. It does count also packets including errors (except packets shorter than 22B)
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS
+
+
+to extract data counters per protocol :
+IBg2: has its own counter: port_rcv_ibg2_data
+NVL: data VL counter - NVL use unique VL
+IBg1: PortRcvData - port_rcv_ibg2_data - NVL
+
+Refer to Visibility IAS SD, BW counters section, for more information",,Port,"32
+64",64,LLU,LLU,Data,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortRcvData,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_rcv_data,,,,
+port_rcv_ibg2_data,port_rcv_data_ibg2_inc,Counts IBg2 data sent including FCS. ,"count in bytes, with FCS",,Port,-,64,LLU,LLU (TX),Data,-,V,-,V,V,-,-,,,,,,,,,,,,
+PortXmitPkts,"port_xmit_pkts_inc	",Total number of packets transmitted on all VLs from the port. This may include packets with errors ,"The counter does not count ARN packets and flow-control packets. 
+It does count also packets including errors (by configuration - default is: count)",,Port,"32
+64",64,LLU,LLU (TX),Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortXmitPkts,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_xmit_pkts,,,,
+port_xmit_ibg1_pkts,port_xmit_ibg1_pkts,Total number of IBg1 packets transmitted on all VLs from the port. This may include packets with errors ,packets transmitted per packet type,,Port,-,64,LLU,LLU (TX),Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,packet_type_counters,port_xmit_ibg1_non_nvl_pkts,,,,
+port_xmit_ibg2_pkts,port_xmit_ibg2_pkts,Total number of IBg2 packets transmitted on all VLs from the port. This may include packets with errors ,packets transmitted per packet type,,Port,-,64,LLU,LLU (TX),Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,packet_type_counters,port_xmit_ibg2_pkts,,,,
+port_xmit_nvl_pkts,port_xmit_nvl_pkts,Total number of NVL packets transmitted on all VLs from the port. This may include packets with errors ,packets transmitted per packet type,,Port,-,64,LLU,LLU (TX),Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,packet_type_counters,port_xmit_ibg1_nvl_pkts,,,,
+PortRcvPkts,"port_rcv_pkts_inc	","Total number of received packets, including packets containing errors.",The counter does not count ARN packets and flow-control packets. It does count also packets including errors (except packets shorter than 22B),,Port,"32
+64",64,LLU,LLU,Packets,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortRcvPkts,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_rcv_pkts,Port Telemetry Counters.port_rcv_pkts ,,,
+port_rcv_ibg1_pkts,gr port_rcv_ibg1_pkts ,Total number of IBg1 packets received from all VLs from the port. This may include packets with errors ,packets transmitted per packet type,,Port,-,64,LLU,LLU (RX),Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,packet_type_counters,port_rcv_ibg1_non_nvl_pkts,,,,
+port_rcv_ibg2_pkts,port_rcv_ibg2_pkts,Total number of IBg2 packets received from all VLs from the port. This may include packets with errors ,packets transmitted per packet type,,Port,-,64,LLU,LLU (RX),Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,packet_type_counters,port_rcv_ibg2_pkts,,,,
+port_rcv_nvl_pkts,port_rcv_nvl_pkts,Total number of NVL packets received from all VLs from the port. This may include packets with errors ,packets transmitted per packet type,,Port,-,64,LLU,LLU (RX),Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,packet_type_counters,port_rcv_ibg1_nvl_pkts,,,,
+port_end_poison_packet,poison_packet_inc,Number of incoming packets with poison end packet bit set.,RX - incoming packets with poison end packet,,Port,-,64,LLU,LLU (RX),Packets,-,V,-,V,-,-,-,-,-,-,-,0x5008,PPCNT,infiniband_general_counters,port_receive_poison,,,,
+ContainNDrainDiscardsRcv,cnd_discards_inc,Packets discarded due to contain and drain - rx side,packets discarded due to contain and drain - rx side,,Port,-,64,LLU,LLU (RX),Packets,-,-,-,V,-,-,-,-,-,-,-,-,-,-,-,,,,
+ContainNDrainDiscardsXmit,contain_n_drain_discard,Packets discarded due to contain and drain - tx side,packets discarded due to contain and drain - tx side,,Port,-,64,LLU_TX,DCM,Packets,-,-,-,V,-,-,-,-,-,-,-,-,-,-,-,,,,
+EgressPkeyLimitedMCPacketErrors,"egress_pkey_limited_mc_packet_errors	",,Count on egress pkey membership errors for IBg1 MC packets,,Port,-,64,LLU_TX,DCM,Packets,-,-,-,V,-,-,-,-,-,-,-,-,-,-,-,,,,
+Due_discards,due_discards,The number of packets that have dropped due to ASIC parity errors  (DUE - Detectable Unrecoverable Errors),Count event of DUE errors - tx side (parity error),,Port,,64,LLU_TX,DCM,Packets,-,-,-,V,,-,-,-,-,-,-,-,-,-,-,,,,
+DropBETrap,count_trap_drop,"Number of packets that were supposed to be trapped on the egress port, and weren’t trapped due to lack of resources. ",,,Port,,64,LLU_TX,DCM,Packets,-,-,-,V,,-,-,-,-,-,-,-,-,-,-,,,,
+DropBEMirrorTx,count_emirror_drop,"Number of emirrored packets on the egress port, that were supposed to be trapped and weren’t trapped due to lack of resources.  (Not relevant for Sunbird- doesn't support Emirror) "," One counter for all mirror agents, drop events due to best-effort in the elogger",,Port,,64,LLU_TX,DCM,Packets,-,-,-,V,,-,-,,,,,-,-,-,-,,,,
+RqError,rq_error,,,,Port,,64,LLU,LLU_RX (passing through DCM),Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortXmitWait,"dqs2llu_xmit_wait_global +
+dqs2llu_xmit_wait_arb_global","The number of ticks during which the port selected by PortSelect had data to transmit but no data was sent during the entire tick either because of insufficient credits or because of lack of arbitration.
+Notice: due to design complexity- the FW responds with the number insufficient credits Only. ",buffer,"there are 2 counters per port  - one counts no credits and second arbitration. 
+Configuration per port if to count (cred|arb) on the arb counter",Port,"32
+64",64,LLU,DQS,Ticks,V,V,V,V,V,V,V,0x4- PM,"0x0012
+0x001D","PortCounters
+PortCountersExtended",PortXmitWait,0x5008,PPCNT,"infiniband_port_counters_attribute
+infiniband_extended_port_counters_attribute",port_xmit_wait,,,,
+PortXmitWaitCredit,"dqs2llu_xmit_wait
+dqs2llu_xmit_wait_arb",the number of ticks during which the port selected by PortSelect had data to transmit but no data was sent during the entire tick because of insufficient credits,buffer,"there are 2 counters per port  - one counts no credits and second arbitration. 
+Configuration per port if to count (cred|arb) on the arb counter",Port,-,64,LLU,DQS,Ticks,V,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_vl_counters,dqs2llu_xmit_wait,,,,
+PortXmitWaitArb,dqs2llu_xmit_wait_arb_global,the number of ticks during which the port selected had data to transmit but no data was sent during the entire tick because of lack of arbitration.,buffer,"there are 2 counters per port  - one counts no credits and second arbitration. 
+Configuration per port if to count (cred|arb) on the arb counter",Port,-,64,LLU,DQS,Ticks,V,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_vl_counters,dqs2llu_xmit_wait_arb,,,,
+PortXmitDataVL,port_xmit_data*_inc,Number of Bytes transmitted on Vl *. ,"The counter does not count ARN packets, 
+It does count also bytes of packets with EBP (doesn't include the EBP)
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS
+
+Refer to Visibility IAS SD, BW counters section, for more information",,VL,,64,LLU,LLU (TX),Bytes,V,V,V,V,?,V,V,0xA,0x0074,PortXmitDataVLExtended,PortXmitDataVLExtended,0x5008,PPCNT,infiniBand_vl_counters,port_xmit_data_vl,,,,
+PortRcvDataVL,port_rcv_data_vl*_inc,Number of Bytes received on Vl *. ,"The counter does not count ARN packets and flow-control packets. 
+It does count also packets including errors (except packets shorter than 22B)
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS
+
+Refer to Visibility IAS SD, BW counters section, for more information",,VL,,64,LLU,LLU,Bytes,V,V,V,V,?,V,V,0xA,0x0073,PortRcvDataVLExtended,PortRcvDataVLExtended,0x5008,PPCNT,infiniBand_vl_counters,port_rcv_data_vl,,,,
+PortXmitPktsVL,port_xmit_pkts*_inc,Number of Packets transmitted on Vl *. ,The counter does not count ARN packets,,VL,,64,LLU,LLU (TX),Packets,V,V,V,V,?,V,V,0xA,0x0076,PortXmitPktsVLExtended,PortXmitPktsVLExtended,0x5008,PPCNT,infiniBand_vl_counters,port_xmit_pkts_vl,,,,
+PortRcvPktsVL,port_rcv_pkts_vl*_inc,Number of Packets received on Vl *. ,The counter does not count ARN packets and flow-control packets. It does count also packets including errors (except packets shorter than 22B),,VL,,64,LLU,LLU,Packets,V,V,V,V,?,V,V,0xA,0x0075,PortRcvPktsVLExtended,PortRcvPktsVLExtended,0x5008,PPCNT,infiniBand_vl_counters,port_rcv_pkts_vl,,,,
+PortLocalPhysicalErrors,port_local_phy_err_inc,"Number of packets received on the port that contain local physical errors (ICRC, VCRC, LPCRC, and all physical errors that cause entry into the BAD PACKET or BAD PACKET DISCARD states of the packet  receiver state machine).",PortRcvErrorDetail:PortLocalPhysicalErrors,"vcrc for data packet
+crc for credit packet
+credits packet not 8B
+phy error",Port,16,64,LLU,"PLU, LLU",Events,V,V,V,V,?,V,V,0x4- PM,0x0015,PortRcvErrorDetails,PortLocalPhysicalErrors,0x5008,PPCNT,infiniBand_packets_counters,port_local_physical_errors,,,,
+PortMalformedPacketErrors,port_malformed_pkts_inc,"Number of packets received on the port that contain malformed packet errors:
+• Data packets: LVer, length, VL
+• Link packets: operand, length, VL","PortRcvErrorDetail:PortMalformedPacketErrors, notice data vs link packets","• Data packets: LVer, length, VL
+• Link packets: operand, length, VL",Port,16,64,LLU,LLU,Packets,V,V,V,V,?,V,V,0x4- PM,0x0015,PortRcvErrorDetails,PortMalformedPacketErrors,0x5008,PPCNT,infiniBand_packets_counters,port_malformed_packet_errors,,,,
+PortBufferOverrunErrors,port_buffer_overrun_err_inc,Number of packets received on the port that were discarded due to buffer overrun. When working in lossless VLs- should not occur ,PortRcvErrorDetail:PortBufferOverrunErrors,"buffer overrun, Total number of packets received on the port that were discarded due to buffer overrun",Port,16,64,LLU,LLU,Packets,V,V,V,V,?,V,V,0x4- PM,0x0015,PortRcvErrorDetails,PortBufferOverrunErrors,0x5008,PPCNT,infiniBand_packets_counters,port_buffer_overrun_errors,,,,
+PortDLIDMappingError,port_dlid_mapping_err_inc,"Total number of packets received on the port that were discarded because they could not be forwarded by the switch relay due to DLID mapping errors. for CAs: one of the following conditions is met:
+• DLID is a unicast LID of this CA Port, or
+• DLID is a multicast LID (i.e. in the range 0xc000 to 0xfffe), or
+• DLID is 0xFFFF (the permissive LID) and VL is 15
+for switches and routers: DLID is not 0x0000.","PortRcvErrorDetail, counts the number of DLID errors (0,over the TOP), Discard reason = PortDLIDMappingError","LLU generated reasons are counted in LLU.
+Before Blackbird:FDB generated reasons were counted in LLU.
+Blackbird: FDB generated reasons counted in FDB.",Port,16,64,LLU+FDB,"LLU - link dlid0
+FDB - discard reasons: PortDlidMapping
+Router: LLU also checks for ""not my DLID + LMC""",Packets,V,V,V,V,?,-,-,0x4- PM,0x0015,PortRcvErrorDetails,PortDLIDMappingErrors,0x5008,PPCNT,infiniBand_packets_counters,port_dlid_mapping_errors,,,,
+PortVLMappingError,port_vl_mapping_error,"Packet discards due to VL mapping behavior are not considered errors, so the behavior of this counter is implementationdependent. However, it is recommended that this counter be used to count  he total number of packets received on the port that were discarded because they could not be forwarded by the switch relay due to VL mapping behavior","PortRcvErrorDetail, counts the number SL2VL errors, Discard reason = PortVLMappingError","Before Blackbird: generated in FDB and counted in LLU.
+Blackbird: generated+counted in FDB.",Port,16,64,FDB,FDB - discard reasons: PortVlMapping,Packets,-,-,V,V,?,-,-,0x4- PM,0x0015,PortRcvErrorDetails,PortVLMappingErrors,0x5008,PPCNT,infiniBand_packets_counters,port_vl_mapping_errors,,,,
+PortLoopingErrors,port_looping_errors,Number of packets received on the port that were discarded because they could not be forwarded by the switch relay due to looping errors (output port = input port). This applies to switches only. ,"PortRcvErrorDetail, Counts the number of packets dropped by the FDB due to loopback errors, Discard reason = LB_Discard","Before Blackbird: generated in FDB and counted in LLU.
+Blackbird: generated+counted in FDB.",Port,16,64,FDB,FDB - discard reasons: LB_Discard,Packets,-,-,V,V,?,-,-,0x4- PM,0x0015,PortRcvErrorDetails,PortLoopingErrors,0x5008,PPCNT,infiniBand_packets_counters,port_looping_errors,,,,
+PortInactiveDiscards,port_inactive_discards,Number of outbound packets discarded by the port because it is not in the active state.,,"DQS discard reason - PortInactiveDiscards
+counted in LLU_TX",Port,16,64,LLU,"DQS - discard reason: LinkDiscard
+LLU (TX) - link down",Packets,-,-,V,V,?,-,-,0x4- PM,0x0016,PortXmitDiscardDetails,PortInactiveDiscards,0x5008,PPCNT,infiniBand_packets_counters,port_inactive_discards,,,,
+PortNeighborMTUDiscards,port_neighbor_mtu_discards,Number of outbound packets discarded by the port because packet length exceeded the PortInfo:NeighborMTU.,,DCM generate the INC and LLU counts it,Port,16,64,LLU,DCM (TX) - NeighborMTU,Packets,-,-,V,V,?,-,-,0x4- PM,0x0016,PortXmitDiscardDetails,PortNeighborMTUDiscards,0x5008,PPCNT,infiniBand_packets_counters,port_neighbor_mtu_discards,,,,
+PortSwLifetimeLimitDiscards,port_sw_lifetime_limit_discards,Number of outbound packets discarded by the port because the Switch Lifetime Limit was exceeded. Applies to switches only.,,DCM generate the INC and LLU counts it,Port,16,64,LLU,PTB - Discard reason : SLL,Packets,-,-,V,V,?,-,-,0x4- PM,0x0016,PortXmitDiscardDetails,PortSwLifetimeLimitDiscards,,,,,,,,
+PortSwHOQLifetimeLimitDiscards,port_sw_hoq_lifetime_limit_discards,Number of outbound packets discarded by the port because the switch HOQ Lifetime Limit was exceeded. Applies to switches only.,,DCM generate the INC and LLU counts it,Port,16,64,LLU,DQS - discard reason: HOQLL,Packets,-,-,V,V,?,-,-,0x4- PM,0x0016,PortXmitDiscardDetails,PortSwHOQLifetimeLimitDiscards,0x5008,PPCNT,infiniband_general_counters,port_sw_hoq_lifetime_limit_discards,,,,
+PortXmitFlowPkts,port_xmit_flow_pkts_inc,"Number of Credit packets in Tx (to Plu)	",,Counts also credit preemption packets,Port,32,64,LLU,LLU,Packets,V,V,V,V,V,V,V,0x4- PM,0x0018,PortFlowCtlCounters,PortXmitFlowPkts,-,-,-,-,,,,
+PortRcvFlowPkts,port_rcv_flow_pkts_inc,"Number of Credit packets in Rx (From Plu)	",,Counts also credit preemption packets,Port,32,64,LLU,LLU,Packets,V,V,V,V,V,V,V,0x4- PM,0x0018,PortFlowCtlCounters,PortRcvFlowPkts,-,-,-,-,,,,
+PortVLXmitFlowCtlUpdateErrors,flc_vl*_timeout ,Number of events that specify that No flow control packets arrived on this vl for configurable time window. (has default value per device) ,"flc_vlX_timouet , no updates of flow control on this vl for configurable time window",,VL,2,64,LLU,LLU,Events,V,V,V,V,?,-,?,"0x4- PM
+0xA","0x001B
+0x007B","PortVLXmitFlowCtlUpdateErrors
+CreditWatchdogTimeoutCounters","PortVLXmitFlowCtlUpdateErrors
+vl*_credit_watchdog_timeout",-,-,-,-,,,,
+PortVLXmitWait_X,"dqs2llu_xmit_wait_*
+dqs2llu_xmit_wait_arb_*","the number of ticks during which the VL selected had data to transmit but no data was sent during the entire tick either because of insufficient credits or because of lack of arbitration.
+Counters per vl - one counts no credits ticks, and the second counts arbitration xmit wait ticks. ",Represents 64b per tick,"there are 2 counters per vl - one counts no credits and second arbitration. 
+Configuration per port if to count (cred|arb) on the arb counter",VL,,64,LLU,DQS,Ticks,V,V,V,V,?,V,?,0xA,0x0077,PortXmitWaitVLExtended,PortXmitWaitVLExtended,0x5008,PPCNT,infiniBand_vl_counters,dqs2llu_xmit_wait,,,,
+SWPortVLCongestion,sw_port_vl_congestion*,"Total number of packets to be transmitted on VL * of the output port selected  that were discarded because of congestion. This includes the following reasons:
+• Switch Lifetime Limit exceeded
+• Switch HOQ Lifetime Limit exceeded","HLL+SLL, perVL",,VL,16,64,LLU,"DQS - discard reason: HOQLL
+PTB - SLL",Packets,-,-,V,V,?,-,-,"0x4- PM
+0xA",0x0030,"SwPortVLCongestion
+PortVLXmitTimeCongExtended","SWPortVLCongestion*
+PortVLXmitTimeCongExtended",,,,,,,,
+PortXmitTimeCong,dqs2llu_time_cong_global,Number of ticks during which the port selected was in the congested state on any VL,,,Port,,64,LLU,DQS,Ticks,V,V,V,V,?,-,?,"0x4- PM
+0xA",0x0011,PortSamplesResult,PortXmitTimeCong,,,,,,,,
+PortVLXmitTimeCong,dqs2llu_time_cong_*,Number of ticks during which the VL selected was in the congested state,LLU per flowq,,VL,32,64,LLU,DQS,Ticks,V,V,V,V,?,-,?,"0x4- PM
+0xA",0x0035,PortVLXmitTimeCong,PortVLXmitTimeCong,,,,,,,,
+PortXmitDataSL,"port_xmit_data_sl*_inc	",Number of Bytes received on SL *. ,"count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS
+
+Bug in LLU TX - not count for IBg2 packets.
+
+The counter is disabled when IBg2 is active.",,SL,,64,LLU,LLU (TX),Bytes,V,V,V,V,?,-,?,"0x4- PM
+0xA","0x0036
+0x0038","PortXmitDataSL
+PortXmitDataSLExt","PortXmitDataSL*
+PortXmitDataSL*Ext",,,,,,,,
+PortRcvDataSL,"port_rcv_data_sl*_inc	",Number of Bytes sent on SL *. ,"count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS
+
+The counter is disabled when IBg2 is active.",,SL,,64,LLU,LLU,Bytes,V,V,V,V,?,-,?,"0x4- PM
+0xA","0x0037
+0x0039","PortRcvDataSL
+PortRcvDataSLExt","PortRcvDataSL*
+PortRcvDataSL*Ext",,,,,,,,
+PortUnicastXmitPackets,"port_unicast_xmit_pkts_inc	",Total number of unicast packets transmitted on all VLs from the port. This may include unicast packets with errors,The counter does not count ARN packets,,Port,64,64,LLU,LLU (TX),Packets,,V,V,V,?,-,-,0x4- PM,0x001D,PortCountersExtended,PortUnicastXmitPackets,0x5008,PPCNT,infiniband_extended_port_counters_attrbiute,port_unicast_xmit_pkts,,,,
+PortUnicastRcvPackets,port_unicast_rcv_pkts_inc,"Total number of unicast packets, including unicast packets containing errors",The counter does not count ARN packets and flow-control packets. It does count also packets including errors (except packets shorter than 22B),,Port,64,64,LLU,LLU,Packets,,V,V,V,?,-,-,0x4- PM,0x001D,PortCountersExtended,PortUnicastRcvPackets,0x5008,PPCNT,infiniband_extended_port_counters_attrbiute,port_unicast_rcv_pkts,,,,
+PortMulticastXmitPackets,"port_multicast_xmit_pkts_inc	",Total number of multicast packets transmitted on all VLs from the port. This may include multicast packets with errors,The counter does not count ARN packets and flow-control packets.,,Port,64,64,LLU,LLU (TX),Packets,,V,V,V,?,-,-,0x4- PM,0x001D,PortCountersExtended,PortMulticastXmitPackets,0x5008,PPCNT,infiniband_extended_port_counters_attrbiute,port_multicast_xmit_pkts,,,,
+PortMulticastRcvPackets,port_multicast_rcv_pkts_inc,"Total number of multicast packets, including multicast packets containing errors",The counter does not count ARN packets and flow-control packets. It does count also packets including errors (except packets shorter than 22B),,Port,64,64,LLU,LLU,Packets,,V,V,V,?,-,-,0x4- PM,0x001D,PortCountersExtended,PortMulticastRcvPackets,0x5008,PPCNT,infiniband_extended_port_counters_attrbiute,port_multicast_rcv_pkts,,,,
+PortRcvPkts9to16Octets,cnt_r16,Rx packets in range 9-16 Bytes (8 and less will be filtered),-,-,Port,-,64,LLU,LLU,Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r16,,,,
+PortRcvPkts17to24Octets,cnt_r24,Rx packets in range 17-24 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_16_24,,,,
+PortRcvPkts25to32Octets,cnt_r32,"	Rx packets in range 25-32 Bytes",-,-,Port,-,64,LLU,LLU,Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_25_32,,,,
+PortRcvPkts33to64Octets,cnt_r64,Rx packets in range 33-64 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_33_64,,,,
+PortRcvPkts65to127Octets,cnt_r127,Rx packets in range 65-127 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_65_128,,,,
+PortRcvPkts128to255Octets,cnt_r255,Rx packets in range 128-255 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_129_256,,,,
+PortRcvPkts256to511Octets,cnt_r511,Rx packets in range 256-511 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_257_512,,,,
+PortRcvPkts512to1023Octets,cnt_r1023,Rx packets in range 512-1023 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,-,-,,,,
+PortRcvPkts1024to1518,cnt_r1518,Rx packets in range 1024-1518 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,-,-,,,,
+PortRcvPkts1519to2047Octets,cnt_r2047,Rx packets in range 1519-2047 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,-,-,,,,
+PortRcvPkts2048to4095Octets,cnt_r4095,Rx packets in range 2048-4095 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,-,-,,,,
+PortRcvPkts4096to8191Octets,cnt_r8191,Rx packets in range 4096-8191 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,-,-,,,,
+PortRcvPkts8192toMTU,cnt_r2mtu,Rx packets in range 512(GPU) / 8192(Switch/ CA)-MTU Bytes (MTU is configurable),-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_r_513_mtu,,,,
+PortXmitPkts9to16Octets,cnt_t16,Tx packets in range 9-16 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t16,,,,
+PortXmitPkts17to24Octets,cnt_t24,Tx packets in range 17-24 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_16_24,,,,
+PortXmitPkts25to32Octets,cnt_t32,"	Tx packets in range 25-32 Bytes",-,-,Port,-,64,LLU,LLU,Packets,-,V,-,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_25_32,,,,
+PortXmitPkts33to64Octets,cnt_t64,Tx packets in range 33-64 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_33_64,,,,
+PortXmitPkts65to127Octets,cnt_t127,Tx packets in range 65-127 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_65_128,,,,
+PortXmitPkts128to255Octets,cnt_t255,Tx packets in range 128-255 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_129_256,,,,
+PortXmitPkts256to511Octets,cnt_t511,Tx packets in range 256-511 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_257_512,,,,
+PortXmitPkts512to1023Octets,cnt_t1023,Tx packets in range 512-1023 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,,-,,,,
+PortXmitPkts1024to1518,cnt_t1518,Tx packets in range 1024-1518 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,,-,,,,
+PortXmitPkts1519to2047Octets,cnt_t2047,Tx packets in range 1519-2047 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,,-,,,,
+PortXmitPkts2048to4095Octets,cnt_t4095,Tx packets in range 2048-4095 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,,-,,,,
+PortXmitPkts4096to8191Octets,cnt_t8191,Tx packets in range 4096-8191 Bytes,-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,-,-,,,,,-,-,,-,,,,
+PortXmitPkts8192toMTU,cnt_t2mtu,Tx packets in range 512(GPU) / 8192(Switch/ CA)-MTU Bytes (MTU is configurable),-,-,Port,-,64,LLU,LLU,Packets,-,V,V,V,V,V,V,,,,,0x5008,PPCNT,infiniBand_packet_size_histograms_counters,cnt_t_513_mtu,,,,
+PortXmitQueuePkts,,,"The numebr of packets queued in the queue, should be supported also by sample counters (to mesaure over a time period)",,,,16,,N/A,,,,V,V,?,,,,,,,,,,,,,,
+PolicerXmitDiscard_X,,,"The number of packets that were discarded by policer X (per policer) and by tail drop
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS",,Policer,,64,SMA,DQL - discard reason: PolicerXmitDiscard,Bytes,,,-,V,?,,,,,,,,,,,,,,
+PortXmitPortError,,,Receiving Port Error from TCB,,,,64,SMA,,Packets,,,-,V,?,,,,,,,,,,,,,,
+RcvPauseVL,rpause_*,"The number of pause indications that were received for the VL. 
+Count amount of received credits only for XON/XOFF mode (pause packets). ","The number of pause indications that were received for the VL
+Count amount of received credits only for XON/XOFF mode (pause packets). 
+Work also in ETH GW same as SPC.",,VL,,32,,LLU,,-,V,-,V,V,-,?,-,-,-,-,-,-,-,-,-,,,
+XmitPauseVL,tpause_prio_*,"The number of pause requests that were requested by the VL
+Count amount of transmitted credits only for XON/XOFF mode (pause packets). ","The number of pause requests that were requested by the VL
+Count amount of transmitted credits only for XON/XOFF mode (pause packets). 
+Work also in ETH GW same as SPC.",,VL,,32,,LLU (TX),,-,V,-,V,V,-,?,-,-,-,-,-,-,-,-,-,,,
+RcvPauseDurationVL,cnt_rpause_dura_*,"The total time in microseconds that transmission of packets to the far-end port have been paused (off state)
+Valid only for XON/XOFF mode (pause packets). ","The total time in microseconds that transmission of packets to the far-end port have been paused (off state)
+Valid only for XON/XOFF mode (pause packets). 
+Work also in ETH GW same as SPC.",,VL,,64,,LLU,Ticks,-,V,-,V,V,-,?,-,-,-,-,-,-,-,-,,,,
+PortARNRcvPkt,good_arn_pkt_inc,The number of Good ARN frames received on the port (does not include PortARNRcvError),The number of Good ARN frames received on the port (does not include PortARNRcvError),,Port,,64,,LLU,Packets,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortFRNRcvPkt,good_frn_pkt_inc,The number of Good FRN frames received on the port (does not include PortARNRcvError),The number of Good FRN frames received on the port (does not include PortARNRcvError),,Port,,64,,LLU,Packets,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortARNRcvError,err_arn_pkt_inc,ARN/FRN was received with wrong ARN-version or wrong ARN-opcode,ARN/FRN was received with wrong ARN-version or wrong ARN-opcode,,Port,,64,,LLU,Packets,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortARNXmitPkt,port_xmit_arn_inc,The number of ARN frames sent from the port,The number of ARN frames sent from the port,,Port,,64,LLU,LLU (TX),Packets,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortFRNXmitPkt,port_xmit_frn_inc,The number of FRN frames sent from the port,The number of FRN frames sent from the port,,Port,,64,LLU,LLU (TX),Packets,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortARNXmitError,Uriel,,ARN discarded in FDB due to ARN-DLID-top or opcode (this counter name is not good - the functionality matches PortARNRcvError counter),"Before Blackbird: generated in FDB and counted in LLU.
+Blackbird: generated+counted in FDB.",Port,,64,FDB,FDB,Packets,-,-,V,V,-,-,-,,,,,,,,,,,,
+PortRNDlidMappingError,,Number of ARN/FRN that carries DLID over top,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortRcvARNActionConsume,,Number of ARN packets classified to consume,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x0082,PortRNCounters,,,,,,,,,
+PortRcvARNActionPassOn,,Number of ARN packets classified to pass-on,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortRcvARNActionDiscard,,Number of ARN packets classified to discard (Note – this is result of mapping table == discard),Note – this is result of mapping table == discard,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortRcvFRNActionConsume,,Number of FRN packets classified to consume,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortRcvFRNActionPassOn,,Number of FRN packets classified to pass-on,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortRcvFRNActionDiscard,,Number of FRN packets classified to discard (Note – this is result of mapping table == discard),Note – this is result of mapping table == discard,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortPktClassificationMatchLegacy,,Number of packets which their routing classification was Static.  ,"Doesn’t count FTO discards, counts FDB discards.",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortPktClassificationMatchRestricted,,Number of packets which their routing classification was HBF.  ,"Doesn’t count FTO discards, counts FDB discards.",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortPktClassificationMatchFree,,Number of packets which their routing classification was AR.  ,"Doesn’t count FTO discards, counts FDB discards.",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortPktForwardingDecisionIsAR,rx_pkt_forwarding_ar,Number of packets which routing decision was Static.  ,"Should include cache hits and TP packets. Cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet. Counts FDB discards.
+Should be equal to the sum of PortARDecisionTookSG0/1/2, except when a cache decides to do AR for a tq not in any SG (cache not flushed after update).",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_ar,-,-,-,-,,,,
+PortPktForwardingDecisionIsHBF,rx_pkt_forwarding_hbf,Number of packets which routing decision was HBF.  ,"Should include cache hits and TP packets. Cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet. Counts FDB discards.
+Should be equal to the sum of PortHBFDecisionTookSG0/1/2, except when a cache decides to do HBF for a tq not in any SG (cache not flushed after update).",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_hbf,-,-,-,-,,,,
+PortPktForwardingDecisionIsStatic,rx_pkt_forwarding_static,Number of packets which routing decision was AR.  ,Should include cache hits and TP packets. Ignores direct_tq /HBA flows. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet. Counts FDB discards.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_static,-,-,-,-,,,,
+PortPktForwardingIsDirectOrHbaLoop,,Number of  direct_tq and HBA generated packets (including acks),Counts FDB discards.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,-,-,-,-,-,-,-,-,,,,
+PortPktForwardingBasedOnFRLocal,rx_pkt_hbf_fallback_local,Number of packets that routing decision was influenced by local FR,"Limitation – can be counted only for static flows. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet. Counts FDB discards.
+Can be counted together with PortPktForwardingBasedOnFRRemote.",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_hbf_fallback_local,-,-,-,-,,,,
+PortPktForwardingBasedOnFRRemote,rx_pkt_hbf_fallback_remote,Number of packets that routing decision was influenced by remote FR,"Limitation – can be counted only for static flows. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet. Counts FDB discards.
+Can be counted together with PortPktForwardingBasedOnFRLocal.",,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_hbf_fallback_remote,-,-,-,-,,,,
+PortARDecisionTookSG0,rx_pkt_forwarding_ar_sg0,Number of AR routing decisions that selected egress port from sub group 0.,Don’t include FR local / remote. If selected port is in more than one SG – HW will count the minimum SG it includes in. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_ar_sg0,-,-,-,-,,,,
+PortARDecisionTookSG1,rx_pkt_forwarding_ar_sg1,Number of AR routing decisions that selected egress port from sub group 1.,Don’t include FR local / remote. If selected port is in more than one SG – HW will count the minimum SG it includes in. If cache hit– will be counted if FDB is doing lookup otherwise cache_no_lookup_packet.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_ar_sg1,-,-,-,-,,,,
+PortARDecisionTookSG2,rx_pkt_forwarding_ar_sg2,Number of AR routing decisions that selected egress port from sub group 2.,Don’t include FR local / remote. If selected port is in more than one SG – HW will count the minimum SG it includes in. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_ar_sg2,-,-,-,-,,,,
+PortHBFDecisionTookSG0,rx_pkt_forwarding_hbf_sg0,Number of HBF routing decisions that selected egress port from sub group 0.,If selected port is in more than one SG – HW will count the minimum SG it includes in. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_hbf_sg0,-,-,-,-,,,,
+PortHBFDecisionTookSG1,rx_pkt_forwarding_hbf_sg1,Number of HBF routing decisions that selected egress port from sub group 1.,Don’t include FR local / remote. If selected port is in more than one SG – HW will count the minimum SG it includes in. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_hbf_sg1,-,-,-,-,,,,
+PortHBFDecisionTookSG2,rx_pkt_forwarding_hbf_sg2,Number of HBF routing decisions that selected egress port from sub group 2.,Don’t include FR local / remote. If selected port is in more than one SG – HW will count the minimum SG it includes in. If cache hit – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet.,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,0xA,0x007A,PortRoutingDecisionCounters,rx_pkt_forwarding_hbf_sg2,-,-,-,-,,,,
+PortCacheNoLookupPkt,,Number of  packet that got cache hit and there is no lookup in FDB ,This is an implementation limitation counter. Counts FDB discards.,Counts packet that got cache hit and there is no lookup in FDB – look for “If cache – will be counted if FDB is doing lookup otherwise cache_no_lookup_packet”  in the comment section to see which counters are covered by this counter ,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortFDSDropARNConsumeDiscard,,Number of ARN packets with consume action that were dropped by FDS fifo ,,Counts ARN packets with consume action that were dropped by FDS fifo ,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortFDSDropARNPassonDiscard,,Number of ARN packets with passon action that were dropped by FDS fifo,,Counts ARN packets with passon action that were dropped by FDS fifo,Port,,64,FDB,FDB ,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortFDSDropFRNConsumeDiscard,,Number of FRN packets with consume action that were dropped by FDS fifo ,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortFDSDropFRNPassonDiscard,,Number of FRN packets with passon action that were dropped by FDS fifo,,,Port,,64,FDB,FDB,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+PortLossyRNPktDiscard,,"Counts 8 items:
+1-4: Fds Fifo Drop (a/frn passon/consume)
+5: Fds Top Checks
+6: Fto Top Checks
+7: Fdb Fifo Drop (Overwritten before reaching FDS)
+8: Fdb No Frn Consume credits Drop (Try to send frn consume to fds but ran out of credits after the decision point to do trap to sma) 
+Items in Red aren't counted because of bug #2479954.","Items 1-4 are also counted in:
+PortFDSDropARNConsumeDiscard
+PortFDSDropARNPassonDiscard
+PortFDSDropFRNConsumeDiscard
+PortFDSDropFRNPassonDiscard",,Port,,64,FDB,"Counts 8 items:
+1-4: Fds Fifo Drop (a/frn passon/consume)
+5: Fds Top Checks
+6: Fto Top Checks
+7: Fdb Fifo Drop (Overwritten before reaching FDS)
+8: Fdb No Frn Consume credits Drop (Try to send frn consume to fds but ran out of credits after the decision point to do trap to sma) 
+Items in Red aren't counted because of bug #2479954.",Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+Histogram_bin,perf_hist*_bin*,"Histogram mechanism can be connected to every counter in Port counters. See:
+https://confluence.nvidia.com/display/NCD/Histograms+sizes+and+granularity",,,Port,,40,LLU,LLU,Histogram,V,V,V,V,,-,-,,,,,,,,,,,,
+XmitDropStall,xmit_drop_stall,Packets dropped due to stall state (SLL?),Packets dropped due to stall state,,Port,,64,LLU,DQS - discard reason: XmitDropStall,Packets,-,-,V,V,,-,,,,,,,,,,,,,
+XFI errored block,,,,,Port,,32,,PLU,Blocks,,,V,V,,,,,,,,,,,,,,,
+Disparity errors,,,,,Port,,32,,PLU,Blocks,,,V,V,,,,,,,,,,,,,,,
+XFI ber count,,,,,Port,,32,,PLU,Blocks,,,V,V,,,,,,,,,,,,,,,
+LLRXmitCells,,,llrtx_cell,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRXmitFrames,,,llrtx_frame,,Port,,32,,PLU,Packets,,,-,V,,,,,,,,,,,,,,,
+LLRXmitAcks,,,llrtx_ack,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRXmitRetryCells,,,llrtx_rtrn_cell,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRXmitRetryFrames,,,llrtx_rtrn_frame,,Port,,32,,PLU,Packets,,,-,V,,,,,,,,,,,,,,,
+LLRXmitRetryEvents,,,llrtx_outstanding_cells_limit_th,,Port,,32,,PLU,Events,,,-,V,,,,,,,,,,,,,,,
+LLRXmitThresholdReached,,,llrtx_rtrn_flows,,Port,,32,,PLU,Events,,,-,V,,,,,,,,,,,,,,,
+LLRRcvFrames,,,llrrx_debug_cnt0,,Port,,32,,PLU,Packets,,,-,V,,,,,,,,,,,,,,,
+LLRReceiveCells,,,llrrx_debug_cnt1,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRRcvAcks,,,llrrx_debug_cnt2,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRRcvCtrlFrames,,,llrrx_debug_cnt3,,Port,,32,,PLU,Packets,,,-,V,,,,,,,,,,,,,,,
+LLRRcvCRCErrors,,,llrrx_debug_cnt4,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRRcvCSNErr,,,llrrx_debug_cnt5,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRRcvCellErrors,,,llrrx_debug_cnt6,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+LLRRcvCellNACK,,,llrrx_debug_cnt7,,Port,,32,,PLU,Cells,,,-,V,,,,,,,,,,,,,,,
+FECCorrectableBlockCounter,,,When per port counted on lane0,,Port,,32,,PLU,FEC Block,,,V,V,,,,,,,,,,,,,,,
+FECUncorrectableBlockCounter,,,When per port counted on lane0,,Port,,32,,PLU,FEC Block,,,V,V,,,,,,,,,,,,,,,
+FECLaneSymbolErrorCounter,,,RS-FEC,,Port,,32,,PLU,Symbol,,,V,V,,,,,,,,,,,,,,,
+FECPortSymbolErrorCounter,,,RS-FEC,,Port,,32,,PLU,Symbol,,,V,V,,,,,,,,,,,,,,,
+PLRXmitRetryBlocks,,,,,Port,,32,,PLU,FEC Block,,,V,V,,,,,,,,,,,,,,,
+PLRXmitRetryEvents,,,,,Port,,32,,PLU,Events,,,V,V,,,,,,,,,,,,,,,
+PLRXmitThresholdReached,,,,,Port,,32,,PLU,Events,,,V,V,,,,,,,,,,,,,,,
+PLRXmitNack,,,,,Port,,32,,PLU,FEC Block,,,V,V,,,,,,,,,,,,,,,
+PLRRcvNack,,,,,Port,,32,,PLU,FEC Block,,,V,V,,,,,,,,,,,,,,,
+PLRRcvCSNErr,,,,,Port,,32,,PLU,FEC Block,,,V,V,,,,,,,,,,,,,,,
+Sample counter 1,port_sample_counter_inc0,Configured counter that allows sampling specific counter on specific time window.,,,Port,,64,,LLU,,V,V,V,V,,V,?,-,-,-,-,-,-,-,-,-,,,
+Sample counter 2,port_sample_counter_inc1,Configured counter that allows sampling specific counter on specific time window.,,,Port,,64,,LLU,,V,V,V,V,,V,?,-,-,-,-,-,-,-,-,-,,,
+Sample counter 3,port_sample_counter_inc2,Configured counter that allows sampling specific counter on specific time window.,,,Port,,64,,LLU,,V,V,V,V,,V,?,-,-,-,-,-,-,-,-,-,,,
+GeneralCounter1,,,bad tx base tq mapping,,Port,,64,FDB,not implemented in regular port  - only in SMA,,-,-,V,V,,-,-,,,,,,,,,,,,
+GeneralCounter2,,,MC becomes empty,,Port,,64,FDB,,,-,-,V,V,,-,-,,,,,,,,,,,,
+GeneralRCVDiscard,rq_general_error ,Counts any packet that was dropped in the recevie pipe and is not counted by any other coutner (for example proprietary checks),"Counts any packet that was dropped in the recevie pipe and is not counted by any other coutner (for example proprietary checks)
+Pelican, Feb. 2014: this counters never incs in the DCM ","LLU generated reasons are counted in LLU.
+Before Blackbird:FDB generated reasons were counted in LLU.
+Blackbird: FDB generated reasons counted in FDB.",Port,,64,LLU,"FDB - discard reason: GeneralRCVDiscard
+FTO - SLID anti spoofing",Packets,V,V,V,V,?,V,?,,,,,,,,,,,,
+GeneralTransmitDiscard,general_transmit_discard,"Counts any packet that was dropped in the transmit pipe and is not counted by any other counter (for example proprietary checks)
+DQS dicard reason - FW_Discard - for OpVL. This counter may raise at SL2VL chaning.","Counts any packet that was dropped in the transmit pipe and is not counted by any other counter (for example proprietary checks)
+FDB discard reason - GeneralTransmitDiscard - not used (Feb. 2014)
+DQS dicard reason - FW_Discard - for OpVL. This counter may raise at SL2VL chaning.",,Port,,64,LLU,"FDB - discard reason: GeneralTransmitDiscard (Not used, Feb. 2014)
+DQS - discard reason: FWDiscard",Packets,-,-,-,V,?,-,-,,,,,,,,,,,,
+PortRcvGRHErrors,dlid_dgid_mismatch_inc,Validates that GRH exists if LNH states so. ,DLID-DGID-Mismatch. Note that GRH.Iper and GRH.NxtHdr are counted in constraint-errors,,Port,,64,LLU,LLU (RX),Packets,V,V,V,V,,-,,,,,,,,,,,,,
+MirrorPktDiscard,mirror_pkt_discard,Number of mirror packets  that arived but mirror_en was not enabled ,,,Port,,64,LLU,LLU (TX): mirror agent disabled,Packets,-,-,V,V,,-,,,,,,,,,,,,,
+EMirrorPktDiscard,emirror_pkt_discard,"packet entered the ""ELOOGER"" SRAM but the packet arrived with discard (start or end).",The number of mirored packets that were decided to be discarded due to lack of resources,,Port,,64,LLU,LLU (TX): best-effort emirror with no credits in the PTB,Packets,-,-,V,V,,-,,,,,,,,,,,,,
+TrapPktDiscard,trap_pkt_discard,"packet entered the ""ELOOGER"" SRAM but the packet arrived with discard (start or end).",,,Port,,64,LLU,"LLU (TX): a trapped packet had no credits in the PTB, so it was not trapped. This is orthogonal to the port transmitting.
+*this is egress trap",Packets,-,-,V,V,,-,,,,,,,,,,,,,
+UCTaildropDiscards,,,,,Port,,64,GLC,"per {TQ,FQ}, when UC packet is dropped on this queue",Packets,,,-,V,,,,,,,,,,,,,,,
+RouterIFRelayErrors,Uriel,,All MC packets are considered as going to the router,"Before Blackbird: generated in FDB and counted in LLU.
+Blackbird: generated+counted in FDB.",Port,,64,FDB,FDB - discard reason: RouterIngressDiscard,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+RouterIFXmitDiscard,router_ifxmit_discard,,,,Port,,64,LLU,LLU (TX): HopLmt,Packets,-,-,V,V,,-,-,,,,,,,,,,,,
+TaildropDiscards - FDB Counters,Uriel,,,,Port,,64,FDB,"FDB - each packet that was discarded (removed from the TQ list) due to taildrop - UC/MC
+Counts per TQ
+won't count a case where drop is decided by mx,qosi quota",Packets,,,V,V,,,,,,,,,,,,,,,
+MCQosiDiscards,Uriel,,,,,,64,FDB,"FDB - per qosi, count dropped MC packets.
+Per FDB",Packets,,,V,V,,,,,,,,,,,,,,,
+DropBEMirror,Uriel,,,,,,64,FDB,"FDB - per mirror agent, count in parallel for each mirror agent , drop events due to best-effort in the agent for good allowed mirroring",Packets,,,V,V,,,,,,,,,,,,,,,
+MirroringTaildropDiscards,Uriel,,,,Port,,64,FDB,"FDB - per mirror agent, count when mirror copy is dropped on this agent due to tail-drop. This counter will count only if copy is allowed for mirroring and passed BE decision (no double count with BE counter - ""DropBEMirror"")",Packets,,,V,V,,,,,,,,,,,,,,,
+PortSFlowSampledPkts,Uriel,,,,Port,,64,FDB,FDB - each packet that were sampled by the SFlow receive agent,Packets,,,V,V,,,,,,,,,,,,,,,
+packet_recieved,Uriel,,Count when packet recieverd0-4 checks are active,,Port,,64,FDB,"FTO Generates the inc, FDB counts",Packets,,,,V,,,,,,,,,,,,,,,
+ContentBasedMirrors,Uriel,,"Counts number of packet that wanted to do Content Based Mirorring, before sampling.",,Port,,64,FDB,"FTO Generates the inc, FDB counts",Packets,,,V,V,,,,,,,,,,,,,,,
+ArrayBasedMirrors,Uriel,,"Counts number of packet that wanted to do Array Based Mirorring, before sampling.",,Port,,64,FDB,FDB generates and counts,Packets,,,V,V,,,,,,,,,,,,,,,
+ImirrorDiscardedDueToHbaQp,Uriel,,,,Port,,64,FDB,"FDB generates this for Imirrors that should have been generated, but were discarded because the original packet (that wanted to generate the imirror) was to the HBA. ",Packets,,,V,V,,,,,,,,,,,,,,,
+SyndromeNoSyndromeEn - SMA debug counters,,,,,Port,,64,,,Packets,,,V,V,,,,,,,,,,,,,,,
+SyndromeNoSyndromeMatch,,,,,Port,,64,,,Packets,,,V,V,,,,,,,,,,,,,,,
+SMAHCADiscards,,,,,Port,,,,,Packets,,,V,V,,,,,,,,,,,,,,,
+PortXmitQueue (DQS - not a counter),,,,,,,32,DQS,Not a counter -  implemented counted in DQS,State,,,V,V,,,,,,,,,,,,,,,
+PortPktRcvFECN,,Not implemented,,,Port,,32,,N/A,,,,,V,,,,,,,,,,,,,,,
+PortPktRcvBECN,,Not implemented,,,Port,,32,,N/A,,,,,V,,,,,,,,,,,,,,,
+PortSLPktRcvFECN,,Not implemented,,,SL,,32,,N/A,,,,,V,,,,,,,,,,,,,,,
+PortSLPktRcvBECN,,Not implemented,,,SL,,32,,N/A,,,,,V,,,,,,,,,,,,,,,
+PortVLOpPkts,,Not implemented,"Sample counter only, cr_space for TS+opcode (8 bits) + mask (same as PortOpRcvPkts), cr space for VL",,VL,,32,,LLU,Packets,,,,V,,,,,,,,,,,,,,,
+PortVLOpData,,Not implemented,"Sample counter only, cr_space for TS+opcode (8 bits) + mask (same as PortOpRcvPkts), cr space for VL
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS",,VL,,64,,LLU,Data,,,,V,,,,,,,,,,,,,,,
+PortOpRcvPkts,,Not implemented,"Sample counter only, cr_space for TS+opcode (8 bits) + mask of which lsbs to mask",,Port,,32,,LLU,Packets,,,-,V,,,,,,,,,,,,,,,
+PortOpRcvData,,Not implemented,"Sample counter only, cr_space for TS+opcode (8 bits) + mask (same as PortOpRcvPkts)
+
+count in bytes. 
+IBg1 not inclding the VCRC
+IBg2 including FCS",,Port,,64,,LLU,Data,,,-,V,,,,,,,,,,,,,,,
+PortXmitPktsSL,,Not implemented,,,SL,,64,LLU,LLU (TX),Bytes,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortRcvPktsSL,"port_rcv_pkts_sl*_inc	",Implemented  and verified - but in Arch document it is crossed- Why?? ,,,SL,,64,LLU,LLU,Packets,V,V,V,V,?,-,?,,,,,,,,,,,,
+PortRcvPause,-,No HW Counter- FW shall Sum all VLs,The numebr of pause packets received on the port,,Port,,32,No,LLU,Packets,-,V,-,V,V,-,?,,,,,,,,,,,,
+PortXmitPause,-,No HW Counter- FW shall Sum all VLs,The number of pause packets that were transmited from the port,,Port,,32,,LLU (TX),Packets,-,V,-,V,V,-,?,,,,,,,,,,,,
+dropped_b2b_24b,,Not implemented,,,Port,,64,LLU,,,,,V,V,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+general_transmit_error,general_transmit_error,,,,,,,,,,-,-,-,-,-,V,,,,,,,,,,,,,
+general_transmit_discard,general_transmit_discard,,,,,,,,,,-,-,-,-,-,V,,,,,,,,,,,,,
+general_transmit_discard_external_contain,general_transmit_discard_external_contain,,,,,,,,,,-,-,-,-,-,V,,,,,,,,,,,,,
+general_transmit_discard_external_hll,general_transmit_discard_external_hll,,,,,,,,,,-,-,-,-,-,V,,,,,,,,,,,,,
+grxb2llu_fecn_inc,grxb2llu_fecn_inc,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Test ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Test2,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
